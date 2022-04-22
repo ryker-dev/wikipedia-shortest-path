@@ -15,26 +15,7 @@ def shortest_path(start, dest):
         if (start == dest):
                 return start
 
-        root = page(start)
-        res = proxy.search(root)
-        depth = []
-        nextDepth = []
-
-        ''' while True:
-                for p in res:
-                        _page = create_page(p["title"], p["parent"])
-                        depth.append(_page)
-                        if (p["title"] == dest):
-                                break '''
-                        ##print(f'Searching {p}...')
-                        ##nextDepth.extend([proxy.search(p["title"])])
-        
-                ##depth = nextDepth
-                ##break;
-        ''' path = []
-        while (_page.parent != start):
-                path.insert(0, _page.parent.title)
-                _page = _page.parent '''
+        res = proxy.search(start, dest)
         
         print(res)
 

@@ -1,3 +1,4 @@
+from inspect import trace
 from mimetypes import init
 from socketserver import ThreadingMixIn
 from xmlrpc.server import SimpleXMLRPCServer
@@ -18,17 +19,39 @@ server = SimpleThreadedXMLRPCServer(IP)
 
 class wikipedia_search:
 
-    def search(self, p:page) -> list[page]:
-        print(type(p))
+    def get_route(self, p:page):
         print(p)
-        res = wikipedia.search(p.title)
+        path = [p.title]
+        while (p.parent != None):
+            path.insert(0, p.parent.title)
+            p = p.parent
+        
+        return path
+
+    def search(self, start, dest):
+        ## TODO: If start == dest return
+
+        root = page(start)
+        res = wikipedia.search(start)
+        depth = []
+
+        for p in res:
+            n = page(p, root)
+            if (p == dest):
+                print(p, dest)
+                print(self.get_route(n))
+                return self.get_route(n)
+            depth.append(page(p, n))
+
+
+        ''' res = wikipedia.search(p.title)
         pages = []
 
         for title in res:
             if (title == p.title):
                 continue
             pages.append(page(title, p))
-        return pages
+        return pages '''
 
 #### Register functions
 server.register_instance(wikipedia_search())

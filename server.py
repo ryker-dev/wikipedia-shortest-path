@@ -27,28 +27,31 @@ def get_path(a:article):
 
         return path
 
+def print_path(path):
+        res = ""
+        for i in range(len(path)-1):
+                res = res + f"{path[i]} -> "
+        res = res + f"{path[i+1]}"
+        return res
+
 def distribution_thread(node, chunks, que, searched_articles):
         proxy = ServerProxy(f"http://{node[0]}:{node[1]}", allow_none=True)
-        ''' for i in range(0, len(que)):
-                if (i % int(nodenum) == 0):
-                        to_search.append(que[i]) '''
         results = [];
 
         print(f"I WAS GIVEN A CHUNK OF LENGTH {len(chunks)}")
-        while len(chunks) > 0:
-                for page in chunks:
-                        ## Add threading
-                        links = proxy.search(page.title)
-                        ##print(to_search)
-                        if (page.title in searched_articles or links == None):
-                                que.remove(page)
-                                continue
-                        for i in links:
-                                a = article(i, page)
-                                que.append(a)
-                                searched_articles.extend(page.title)
-                                results.append(a)
+        for page in chunks:
+                ## Add threading
+                links = proxy.search(page.title)
+                ##print(to_search)
+                if (page.title in searched_articles or links == None):
                         que.remove(page)
+                        continue
+                for i in links:
+                        a = article(i, page)
+                        que.append(a)
+                        searched_articles.append(i)
+                        results.append(a)
+                que.remove(page)
 
         return results
         ''' for i in res:
@@ -72,20 +75,16 @@ def shortest_path(start, dest):
         
         searched_articles = []
 
-        que = []
+        root = article(start.lower())
+        que = [root]
         ret = []
-        que.append(article(wikipedia.search(start)[0]))
-        ''' for nodenum in NODES:
-                node = NODES[nodenum]
-                with concurrent.futures.ThreadPoolExecutor() as executor:
-                        future = executor.submit(distribution_thread, nodenum, node, dest, que, searched_articles)
-                        ret = future.result()
-                que.extend(ret) '''
+        ##que.append(article(wikipedia.search(start)[0]))
         
         for x in range(5):
                 ## Divide labour between nodes
                 chunks = []
                 threads = []
+                found_article = article(None)
                 chunks = list(divide(que, len(NODES)))
 
                 ##print(f"!!!!{chunks}")
@@ -106,6 +105,14 @@ def shortest_path(start, dest):
                 for thread in threads:
                         thread.join()
 
+                print(searched_articles)
+                if (dest in searched_articles):
+                        print("FOUND")
+                        for page in que:
+                                if page.title == dest:
+                                        print("FOUND2")
+                                        return get_path(page)
+
         ##que = que + list(set(res) - set(que))
 
         return None
@@ -114,4 +121,5 @@ def shortest_path(start, dest):
                         
 
 if __name__ == '__main__':
-        path = shortest_path("Ujjal Singh", "The Crown")
+        path = shortest_path("Treffauer", "Sure-footedness")
+        print(print_path(path))

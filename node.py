@@ -16,7 +16,7 @@ class wikipedia_search:
     def search(self, title):
         try:
             print(f"Searching {title}")
-            pages = wikipedia.page(title).links
+            pages = wikipedia.page(title.lower(), auto_suggest=False).links
             print(f"Found {len(pages)} links from {title}")
             return pages
         except (wikipedia.DisambiguationError) as e:

@@ -17,9 +17,9 @@ NODES = {
 
 class article:
         """Used to store the retreived pages in a tree structure"""
-    def __init__(self, title, parent=None):
-        self.title = title
-        self.parent = parent
+        def __init__(self, title, parent=None):
+                self.title = title
+                self.parent = parent
 
 def get_path(a:article):
         """Retreives the path up to the highest parent. Returns a list of strings."""

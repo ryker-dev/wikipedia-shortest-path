@@ -4,6 +4,10 @@ import wikipedia
 ADDRESS = "http://localhost:3000"
 proxy = ServerProxy(ADDRESS, allow_none=True)
 
+NODES = {
+        '1': ("localhost", 3000),
+        '2': ("localhost", 3001),
+}
 class article:
     def __init__(self, title, parent=None):
         self.title = title
@@ -17,21 +21,41 @@ def get_path(a:article):
 
         return path
 
+''' def check_parameters(start, dest):
+        for p in [start, dest]:
+                try:
+                        ret = wikipedia.search(p)
+                        if (ret == None):
+                                print(F"Could not find any pages matching {p}")
+                                return False
+                        return True
+                except wikipedia.exceptions.DisambiguationError as e:
+                        print(f"Term {p} is not disambiguous. Try:")
+                        print(e.options)
+                        return False
+                except wikipedia.PageError as e:
+                        print(f"Could not find any pages matching {p}\n{e}")
+                        return False '''
+
+
 def shortest_path(start, dest):
         if (start == dest):
                 return start
 
+        ##if (not check_parameters(start, dest)): return None
+        
         searched_articles = []
         articles = []
 
-        if (proxy.search(start) == None):
-                print(f"Could not find article {start}!")
-        
-        if (proxy.search(dest) == None):
-                print(f"Could not find article {dest}!")
+        ''' roots = proxy.search(wikipedia.search(start)[0])
 
-        root = article(start)
-        que = [root]
+        print(roots)
+        for root in roots:
+                que = [article(root)]
+        print(que) '''
+
+        que = []
+        que.append(article(wikipedia.search(start)[0]))
         while True:
                 for artic in que:
                         ## Add threading
@@ -45,13 +69,11 @@ def shortest_path(start, dest):
                                 que.append(a)
                                 searched_articles.append(i)
 
-        print(articles[0].parent)
-
         return None
                         
                                 
                         
 
 if __name__ == '__main__':
-        path = shortest_path("Mercury", "Earth")
+        path = shortest_path("Mercury", "Adolf Hitler")
         print(path)

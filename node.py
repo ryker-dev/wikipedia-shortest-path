@@ -2,8 +2,9 @@ from mimetypes import init
 from socketserver import ThreadingMixIn
 from xmlrpc.server import SimpleXMLRPCServer
 import wikipedia
+import sys
 
-IP = ("localhost", 3000)
+IP = (sys.argv[1], int(sys.argv[2]))
 
 class SimpleThreadedXMLRPCServer(ThreadingMixIn, SimpleXMLRPCServer):
     pass
@@ -18,9 +19,7 @@ class wikipedia_search:
             pages = wikipedia.page(title).links
             return pages
         except (wikipedia.DisambiguationError) as e:
-            ret = []
-            for page in e.options: ret.append(self.search(page))
-            return ret
+            print(f"{e}")
         except (wikipedia.PageError) as e:
             print(f"Searching page {title} failed!\n{e}")
         return None

@@ -1,9 +1,5 @@
-from asyncio import exceptions
-from itertools import count
 from xmlrpc.client import Server, ServerProxy
-import wikipedia
 import threading
-import concurrent.futures
 import numpy as np
 
 ADDRESS = "http://localhost:3000"
@@ -14,6 +10,7 @@ NODES = {
         '2': ("localhost", 3002),
         '3': ("localhost", 3003),
 }
+
 class article:
     def __init__(self, title, parent=None):
         self.title = title

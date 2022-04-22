@@ -1,4 +1,3 @@
-from mimetypes import init
 from socketserver import ThreadingMixIn
 from xmlrpc.server import SimpleXMLRPCServer
 import wikipedia

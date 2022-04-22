@@ -6,8 +6,7 @@ import wikipedia
 IP = ("localhost", 3000)
 
 class page:
-
-    def __init__(self, title, parent):
+    def __init__(self, title, parent=None):
         self.title = title
         self.parent = parent
 
@@ -19,14 +18,16 @@ server = SimpleThreadedXMLRPCServer(IP)
 
 class wikipedia_search:
 
-    def search(self, name) -> list:
-        res = wikipedia.search(name)
+    def search(self, p:page) -> list[page]:
+        print(type(p))
+        print(p)
+        res = wikipedia.search(p.title)
         pages = []
 
         for title in res:
-            if (title == name):
+            if (title == p.title):
                 continue
-            pages.append(page(title, name))
+            pages.append(page(title, p))
         return pages
 
 #### Register functions

@@ -106,6 +106,9 @@ def shortest_path(start, dest):
                 for thread in threads:
                         thread.join()
 
+                if (not que or len(que) < 1):
+                        print("Couldn't find a path between the two articles.")
+                        break
                 if (dest in searched_articles):
                         print(dest, searched_articles)
                         for page in que:
@@ -120,5 +123,5 @@ def shortest_path(start, dest):
                         
 
 if __name__ == '__main__':
-        path = shortest_path("Germany", "Finland")
-        print(print_path(path))
+        path = shortest_path("Ono-i-Lau", "Finland")
+        if (path): print(print_path(path))

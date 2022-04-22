@@ -1,6 +1,5 @@
 from xmlrpc.client import Server, ServerProxy
 import threading
-import numpy as np
 
 ADDRESS = "http://localhost:3000"
 

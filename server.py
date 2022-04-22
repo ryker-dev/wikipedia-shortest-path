@@ -107,10 +107,8 @@ def shortest_path(start, dest):
 
                 print(searched_articles)
                 if (dest in searched_articles):
-                        print("FOUND")
                         for page in que:
                                 if page.title == dest:
-                                        print("FOUND2")
                                         return get_path(page)
 
         ##que = que + list(set(res) - set(que))

@@ -9,7 +9,7 @@ IP = (sys.argv[1], int(sys.argv[2]))
 class SimpleThreadedXMLRPCServer(ThreadingMixIn, SimpleXMLRPCServer):
     pass
 
-server = SimpleThreadedXMLRPCServer(IP, allow_none=True)
+server = SimpleThreadedXMLRPCServer(IP, allow_none=True, logRequests=False)
 
 class wikipedia_search:
 
@@ -17,9 +17,11 @@ class wikipedia_search:
         try:
             print(f"Searching {title}")
             pages = wikipedia.page(title).links
+            print(f"Found {len(pages)} links from {title}")
             return pages
         except (wikipedia.DisambiguationError) as e:
             print(f"{e}")
+            return e.options
         except (wikipedia.PageError) as e:
             print(f"Searching page {title} failed!\n{e}")
         return None

@@ -28,11 +28,10 @@ class wikipedia_search:
         try:
             print(f"Searching {title}")
 
-            pages = wikipedia.page(title.lower().replace(" ", ""), auto_suggest=False).links
+            pages = wikipedia.page(title, auto_suggest=False).links
             ##pages = self.get_links(title)
 
             print(f"Found {len(pages)} links from {title}")
-            print(pages)
             return pages
         except (wikipedia.DisambiguationError) as e:
             print(f"{e}")

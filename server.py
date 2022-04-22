@@ -119,5 +119,10 @@ def shortest_path(start, dest):
                         
 
 if __name__ == '__main__':
-        path = shortest_path("Germany", "Finland")
+        try:
+                start, dest = sys.argv[1], sys.argv[2]
+        except IndexError:
+                print(f"2 arguments needed. You provided {len(sys.argv)-1}")
+                exit(0)
+        path = shortest_path(start, dest)
         if (path): print(print_path(path))

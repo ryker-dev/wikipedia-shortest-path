@@ -38,7 +38,6 @@ def distribution_thread(node, chunks, que, searched_articles):
         proxy = ServerProxy(f"http://{node[0]}:{node[1]}", allow_none=True)
         results = [];
 
-        print(f"I WAS GIVEN A CHUNK OF LENGTH {len(chunks)}")
         for page in chunks:
                 ## Add threading
                 links = proxy.search(page.title)
@@ -80,17 +79,15 @@ def shortest_path(start, dest):
         ret = []
         ##que.append(article(wikipedia.search(start)[0]))
         
-        for x in range(5):
+        while True:
                 ## Divide labour between nodes
                 chunks = []
                 threads = []
                 found_article = article(None)
                 chunks = list(divide(que, len(NODES)))
-
-                ##print(f"!!!!{chunks}")
-                ''' for chunk in chunks:
-                        print(len(chunk)) '''
                 
+                print(f"Calling remote nodes called with {len(que)} page(s).")
+                counter = 0
                 for nodenum in NODES:
                         node = NODES[nodenum]
                         try:
@@ -99,14 +96,18 @@ def shortest_path(start, dest):
                                 thread = threading.Thread(target=distribution_thread, args=(node, chunk, que, searched_articles))
                                 threads.append(thread)
                                 thread.start()
+                                counter += 1
                         except IndexError:
                                 continue
+                
+                print(f"{counter} remote node(s) called.")
+                print(f"waiting...")
 
                 for thread in threads:
                         thread.join()
 
-                print(searched_articles)
                 if (dest in searched_articles):
+                        print(dest, searched_articles)
                         for page in que:
                                 if page.title == dest:
                                         return get_path(page)
@@ -119,5 +120,5 @@ def shortest_path(start, dest):
                         
 
 if __name__ == '__main__':
-        path = shortest_path("Treffauer", "Sure-footedness")
+        path = shortest_path("Germany", "Finland")
         print(print_path(path))

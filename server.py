@@ -1,8 +1,11 @@
 from xmlrpc.client import Server, ServerProxy
 import threading
+import sys
 
 ADDRESS = "http://localhost:3000"
 
+## Edit available nodes here
+## (address, port)
 NODES = {
         '0': ("localhost", 3000),
         '1': ("localhost", 3001),
@@ -10,12 +13,16 @@ NODES = {
         '3': ("localhost", 3003),
 }
 
+########
+
 class article:
+        """Used to store the retreived pages in a tree structure"""
     def __init__(self, title, parent=None):
         self.title = title
         self.parent = parent
 
 def get_path(a:article):
+        """Retreives the path up to the highest parent. Returns a list of strings."""
         path = []
         while a != None:
                 path.insert(0, a.title)
@@ -24,6 +31,7 @@ def get_path(a:article):
         return path
 
 def print_path(path):
+        """Takes a list of strings and prints them in the result format."""
         res = ""
         for i in range(len(path)-1):
                 res = res + f"{path[i]} -> "
@@ -49,14 +57,6 @@ def distribution_thread(node, chunks, queue, searched_articles):
                 queue.remove(page)
 
         return results
-        ''' for i in res:
-                print(i)
-                if (i in searched_articles or i == None): continue
-                a = article(i, artic)
-                if (i == dest): return get_path(a)
-                queue.append(a)
-                searched_articles.append(i)
-                queue.remove(i) '''
 
 ## Jurgen Strydom, Stackoverflow, Feb 21, 2019 https://stackoverflow.com/questions/24483182/python-split-list-into-n-chunks 
 def divide(queue, n):
@@ -65,6 +65,7 @@ def divide(queue, n):
         yield queue[i::n]
 
 def shortest_path(start, dest):
+        """Main function to start the retreival of the shortest path and call the nodes."""
         if (start == dest):
                 return start
         

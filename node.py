@@ -5,30 +5,25 @@ import wikipedia
 
 IP = ("localhost", 3000)
 
-class page:
-    def __init__(self, title, parent=None):
-        self.title = title
-        self.parent = parent
-
-
 class SimpleThreadedXMLRPCServer(ThreadingMixIn, SimpleXMLRPCServer):
     pass
 
-server = SimpleThreadedXMLRPCServer(IP)
+server = SimpleThreadedXMLRPCServer(IP, allow_none=True)
 
 class wikipedia_search:
 
-    def search(self, p:page) -> list[page]:
-        print(type(p))
-        print(p)
-        res = wikipedia.search(p.title)
-        pages = []
-
-        for title in res:
-            if (title == p.title):
-                continue
-            pages.append(page(title, p))
-        return pages
+    def search(self, title):
+        try:
+            print(f"Searching {title}")
+            pages = wikipedia.page(title).links
+            return pages
+        except (wikipedia.DisambiguationError) as e:
+            ret = []
+            for page in e.options: ret.append(self.search(page))
+            return ret
+        except (wikipedia.PageError) as e:
+            print(f"Searching page {title} failed!\n{e}")
+        return None
 
 #### Register functions
 server.register_instance(wikipedia_search())
